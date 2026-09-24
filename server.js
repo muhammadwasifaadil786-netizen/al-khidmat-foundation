@@ -82,6 +82,11 @@ setTimeout(seedDatabase, 2000);
 
 // Routes
 
+// 0. Root / Home Route
+app.get('/', (req, res) => {
+  res.send('Al Khidmat Foundation API is running successfully!');
+});
+
 // 1. Login Route
 app.post('/api/auth/login', async (req, res) => {
   try {
