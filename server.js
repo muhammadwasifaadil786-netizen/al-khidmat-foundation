@@ -11,12 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected Successfully'))
   .catch(err => console.log('DB Connection Error:', err));
 
-// Schemas & Models
 const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
@@ -111,7 +109,6 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// 2. Get All Emergencies (Public)
 app.get('/api/emergencies', async (req, res) => {
   try {
     const emergencies = await Emergency.find().sort({ createdAt: -1 });
@@ -121,7 +118,6 @@ app.get('/api/emergencies', async (req, res) => {
   }
 });
 
-// 3. Post Emergency (Restricted to Volunteers & Admins)
 app.post('/api/emergencies', verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'volunteer' && req.user.role !== 'admin') {
@@ -134,7 +130,6 @@ app.post('/api/emergencies', verifyToken, async (req, res) => {
   }
 });
 
-// 4. Record Donation (Public - Supports Guest Donations)
 app.post('/api/donations', async (req, res) => {
   try {
     const { donorName, email, category, amount, paymentMethod } = req.body;
@@ -156,7 +151,6 @@ app.post('/api/donations', async (req, res) => {
   }
 });
 
-// 5. Admin Stats Dashboard (Strictly Admin Only)
 app.get('/api/admin/stats', verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
